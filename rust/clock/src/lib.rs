@@ -10,29 +10,30 @@ impl Clock {
         let mut tmp_mins: i32 = minutes;
         let mut tmp_hours: i32 = hours;
 
-        if minutes >= 60 {
-            tmp_mins = minutes % 60;
-            tmp_hours += minutes / 60;
+        while tmp_mins >= 60 {
+            tmp_mins -= 60;
+            tmp_hours += 1;
         }
 
-        if minutes < 0 {
-            tmp_mins = (minutes % 60)+60; // why does this work for minutes = -40 as input, but minutes % 60 == -40?????
-            tmp_hours += (minutes / 60)-1;
-        }
-
-        while tmp_hours < 0 {
-            tmp_hours = 24 + tmp_hours;
+        while tmp_mins < 0 {
+            tmp_mins += 60;
+            tmp_hours -= 1;
         }
 
         while tmp_hours >= 24 {
             tmp_hours -= 24;
         }
 
+        while tmp_hours < 0 {
+            tmp_hours += 24
+        }
+
         Clock { minutes: tmp_mins, hours: tmp_hours }
     }
 
     pub fn add_minutes(&self, minutes: i32) -> Self {
-        Clock {minutes, hours: self.hours}
+        Clock::new(self.hours, self.minutes + minutes)
+        //Clock {minutes: self.minutes + minutes, hours: self.hours}
     }
 
 }
